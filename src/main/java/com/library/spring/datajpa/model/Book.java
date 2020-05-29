@@ -2,6 +2,8 @@ package com.library.spring.datajpa.model;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "books")
 public class Book {
 
 	@Id
