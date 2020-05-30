@@ -1,9 +1,9 @@
 package com.library.spring.datajpa.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.library.spring.datajpa.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +27,15 @@ import com.library.spring.datajpa.repository.BookRepository;
 public class BookController {
 
 	@Autowired
-	BookRepository bookRepository;
+	private BookRepository bookRepository;
+
+	@Autowired
+	private BookService bookService;
 
 	@GetMapping("/books")
 	public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
 		try {
-			List<Book> books = new ArrayList<Book>();
-
-			if (title != null)
-				bookRepository.findByTitleContaining(title).forEach(books::add);
-			else
-				bookRepository.findAll().forEach(books::add);
+			List<Book> books = bookService.getAllBooks(title);
 
 			if (books.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -51,19 +49,16 @@ public class BookController {
 
 	@GetMapping("/books/{id}")
 	public ResponseEntity<Book> getBookById(@PathVariable("id") long id) {
-		Optional<Book> bookData = bookRepository.findById(id);
+		Optional<Book> bookData = bookService.findById(id);
 
-		if (bookData.isPresent()) {
-			return new ResponseEntity<>(bookData.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		return bookData.map(book -> new ResponseEntity<>(book, HttpStatus.OK))
+				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	@PostMapping("/books")
 	public ResponseEntity<Book> createBook(@RequestBody Book book) {
 		try {
-			Book _book = bookRepository
+			Book _book = bookService
 					.save(new Book(book.getTitle(), book.getAuthor()));
 			return new ResponseEntity<>(_book, HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -73,22 +68,16 @@ public class BookController {
 
 	@PutMapping("/books/{id}")
 	public ResponseEntity<Book> updateBook(@PathVariable("id") long id, @RequestBody Book book) {
-		Optional<Book> bookData = bookRepository.findById(id);
+		Optional<Book> result = bookService.updateBook(id, book);
 
-		if (bookData.isPresent()) {
-			Book _book = bookData.get();
-			_book.setTitle(book.getTitle());
-			_book.setAuthor(book.getAuthor());
-			return new ResponseEntity<>(bookRepository.save(_book), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		return result.map(b -> new ResponseEntity<>(b, HttpStatus.OK))
+				.orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	@DeleteMapping("/books/{id}")
 	public ResponseEntity<HttpStatus> deleteBook(@PathVariable("id") long id) {
 		try {
-			bookRepository.deleteById(id);
+			bookService.deleteById(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);

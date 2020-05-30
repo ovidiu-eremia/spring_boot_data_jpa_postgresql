@@ -45,6 +45,10 @@ public class Book {
 		this.author = author;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", auth=" + author + "]";
