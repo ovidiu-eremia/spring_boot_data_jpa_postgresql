@@ -35,7 +35,7 @@ public class BookController {
 	@GetMapping("/books")
 	public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
 		try {
-			List<Book> books = bookService.getAllBooks(title);
+			List<Book> books = bookService.getAllBooks(title, null);
 
 			if (books.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);

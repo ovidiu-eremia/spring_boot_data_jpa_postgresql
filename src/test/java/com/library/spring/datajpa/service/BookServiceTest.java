@@ -34,7 +34,7 @@ public class BookServiceTest {
         given(bookRepository.findByTitleContaining(title)).willReturn(books);
 
         //when
-        List<Book> result = underTest.getAllBooks(title);
+        List<Book> result = underTest.getAllBooks(title, null);
 
         //then
         assertThat(result.size()).isEqualTo(1);
@@ -45,19 +45,62 @@ public class BookServiceTest {
     }
 
     @Test
+    public void getAllBooksWhenAuthorNotNull() {
+        //given
+        String title = "Some book";
+        String author = "Some author";
+        Book book = new Book(title, author);
+        List<Book> books = Collections.singletonList(book);
+
+        given(bookRepository.findByAuthorContaining(author)).willReturn(books);
+
+        //when
+        List<Book> result = underTest.getAllBooks(null, author);
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(book);
+
+        verify(bookRepository).findByAuthorContaining(author);
+        verify(bookRepository, times(0)).findAll();
+    }
+
+    @Test
     public void getAllBooksWhenTitleNull() {
+        //given
         Book book = new Book("Some book", "Some author");
         List<Book> books = Collections.singletonList(book);
 
         given(bookRepository.findAll()).willReturn(books);
 
-        List<Book> result = underTest.getAllBooks(null);
+        //when
+        List<Book> result = underTest.getAllBooks(null, null);
 
+        //then
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(book);
 
         verify(bookRepository).findAll();
         verify(bookRepository, times(0)).findByTitleContaining(any());
+    }
+
+    @Test
+    public void getAllBooksWhenAuthorNull() {
+        //given
+        Book book = new Book("Some book", "Some author");
+        List<Book> books = Collections.singletonList(book);
+
+        given(bookRepository.findAll()).willReturn(books);
+
+        //when
+        List<Book> result = underTest.getAllBooks(null, null);
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0)).isEqualTo(book);
+
+        verify(bookRepository).findAll();
+        verify(bookRepository, times(0)).findByAuthorContaining(any());
     }
 
     @Test

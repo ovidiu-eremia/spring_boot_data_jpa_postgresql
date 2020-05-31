@@ -3,13 +3,8 @@ package com.library.spring.datajpa.service;
 import com.library.spring.datajpa.model.Book;
 import com.library.spring.datajpa.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +16,16 @@ public class BookServiceImpl implements BookService {
     private BookRepository bookRepository;
 
     @Override
-    public List<Book> getAllBooks(String title) {
+    public List<Book> getAllBooks(String title, String author) {
         List<Book> books = new ArrayList<Book>();
 
         if (title != null) {
             bookRepository.findByTitleContaining(title).forEach(books::add);
         } else {
-            bookRepository.findAll().forEach(books::add);
+            if (author != null) {
+                bookRepository.findByAuthorContaining(author).forEach(books::add);
+            } else
+                bookRepository.findAll().forEach(books::add);
         }
 
         return books;
