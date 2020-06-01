@@ -2,12 +2,13 @@ package com.library.spring.datajpa.model;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "Client")
 @Table(name = "clients")
 public class Client {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(name="clients_sequence", initialValue=1, allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_sequence")
 	private long id;
 
 	@Column(name = "name")

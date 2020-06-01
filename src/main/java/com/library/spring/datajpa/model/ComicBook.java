@@ -2,12 +2,13 @@ package com.library.spring.datajpa.model;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "ComicBook")
 @Table(name = "comic_books")
 public class ComicBook {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@SequenceGenerator(name="comic_books_sequence", initialValue=1, allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comic_books_sequence")
 	private long id;
 
 	@Column(name = "series")

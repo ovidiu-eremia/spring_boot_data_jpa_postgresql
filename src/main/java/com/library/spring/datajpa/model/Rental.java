@@ -3,12 +3,13 @@ package com.library.spring.datajpa.model;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+@Entity(name = "Rental")
 @Table(name = "rentals")
 public class Rental {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name="rentals_sequence", initialValue=1, allocationSize=1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rentals_sequence")
     private long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
