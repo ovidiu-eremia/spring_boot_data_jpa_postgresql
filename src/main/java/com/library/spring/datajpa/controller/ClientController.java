@@ -1,7 +1,6 @@
 package com.library.spring.datajpa.controller;
 
 import com.library.spring.datajpa.model.Client;
-import com.library.spring.datajpa.model.Client;
 import com.library.spring.datajpa.repository.ClientRepository;
 import com.library.spring.datajpa.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;

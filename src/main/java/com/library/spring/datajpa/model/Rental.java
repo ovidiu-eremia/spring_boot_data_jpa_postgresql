@@ -1,6 +1,9 @@
 package com.library.spring.datajpa.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 
 @Entity(name = "Rental")
@@ -8,7 +11,7 @@ import java.util.Date;
 public class Rental {
 
     @Id
-    @SequenceGenerator(name="rentals_sequence", initialValue=1, allocationSize=1)
+    @SequenceGenerator(name = "rentals_sequence", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rentals_sequence")
     private long id;
 
@@ -34,14 +37,12 @@ public class Rental {
 
     }
 
-    public Rental(Client client, Book book) {
+    public Rental(Client client, Book book, ComicBook comicBook
+            , Date rentedDate) {
         this.client = client;
         this.book = book;
-    }
-
-    public Rental(Client client, ComicBook comicBook) {
-        this.client = client;
         this.comicBook = comicBook;
+        this.rentedDate = rentedDate;
     }
 
     public long getId() {
