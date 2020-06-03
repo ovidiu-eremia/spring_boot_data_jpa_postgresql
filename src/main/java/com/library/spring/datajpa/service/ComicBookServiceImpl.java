@@ -33,7 +33,7 @@ public class ComicBookServiceImpl implements ComicBookService {
     }
 
     @Override
-    public Optional<ComicBook> findById(long id) {
+    public Optional<ComicBook> findById(Long id) {
         return comicBookRepository.findById(id);
     }
 
@@ -43,12 +43,12 @@ public class ComicBookServiceImpl implements ComicBookService {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         comicBookRepository.deleteById(id);
     }
 
     @Override
-    public Optional<ComicBook> updateComicBook(long id, ComicBook comicBook) {
+    public Optional<ComicBook> updateComicBook(Long id, ComicBook comicBook) {
         Optional<ComicBook> comicBookData = comicBookRepository.findById(id);
 
         if (comicBookData.isPresent()) {

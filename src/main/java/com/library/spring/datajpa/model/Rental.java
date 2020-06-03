@@ -13,7 +13,7 @@ public class Rental {
     @Id
     @SequenceGenerator(name = "rentals_sequence", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rentals_sequence")
-    private long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
@@ -45,11 +45,11 @@ public class Rental {
         this.rentedDate = rentedDate;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

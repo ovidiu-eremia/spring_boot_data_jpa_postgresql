@@ -9,7 +9,7 @@ public class ComicBook {
 	@Id
 	@SequenceGenerator(name="comic_books_sequence", initialValue=1, allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comic_books_sequence")
-	private long id;
+	private Long id;
 
 	@Column(name = "series")
 	private String series;
@@ -26,7 +26,7 @@ public class ComicBook {
 		this.number = number;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -46,7 +46,7 @@ public class ComicBook {
 		this.number = number;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

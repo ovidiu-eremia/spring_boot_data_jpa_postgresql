@@ -1,13 +1,17 @@
 package com.library.spring.datajpa.service;
 
 import com.library.spring.datajpa.dto.RentalDto;
+import com.library.spring.datajpa.model.Book;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RentalService {
-    Optional<RentalDto> findById(long id);
+    List<RentalDto> getAllRentals(Long clientId, Long bookId, Long comicBookId);
+
+    Optional<RentalDto> findById(Long id);
 
     RentalDto rent(RentalDto rentalDto);
 
-    Optional<RentalDto> returnRental(long id, RentalDto rentalDto);
+    Optional<RentalDto> returnRental(Long id, RentalDto rentalDto);
 }

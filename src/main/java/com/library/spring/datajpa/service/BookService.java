@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface BookService {
     List<Book> getAllBooks(String title, String author);
 
-    Optional<Book> findById(long id);
+    Optional<Book> findById(Long id);
 
     Book save(Book book);
 
-    Optional<Book> updateBook(long id, Book book);
+    Optional<Book> updateBook(Long id, Book book);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

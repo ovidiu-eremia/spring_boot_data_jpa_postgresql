@@ -36,7 +36,7 @@ public class RentalController {
     public ResponseEntity<RentalDto> returnRental(@PathVariable("id") long id, @RequestBody RentalDto rentalDto) {
         Optional<RentalDto> result = rentalService.returnRental(id, rentalDto);
 
-        return result.map(b -> new ResponseEntity<>(b, HttpStatus.OK))
+        return result.map(r -> new ResponseEntity<>(r, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

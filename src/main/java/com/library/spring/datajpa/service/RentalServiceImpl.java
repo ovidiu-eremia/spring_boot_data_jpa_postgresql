@@ -12,7 +12,9 @@ import com.library.spring.datajpa.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,12 +33,43 @@ public class RentalServiceImpl implements RentalService {
     private ComicBookRepository comicBookRepository;
 
     @Override
-    public Optional<RentalDto> findById(long id) {
-        Optional<Rental> rental = rentalRepository.findById(id);
-        if (rental.isPresent()) {
-            Rental foundRental = rental.get();
+    public List<RentalDto> getAllRentals(Long clientId, Long bookId, Long comicBookId) {
+        List<Rental> rentals = new ArrayList<Rental>();
+
+        if (clientId != null) {
+            rentals.addAll(rentalRepository.findByClientId(clientId));
+        } else if (bookId != null) {
+            rentals.addAll(rentalRepository.findByBookId(bookId));
+        } else if (comicBookId != null) {
+            rentals.addAll(rentalRepository.findByComicBookId(comicBookId));
+        } else rentals.addAll(rentalRepository.findAll());
+
+        return getRentalDtos(rentals);
+    }
+
+    private List<RentalDto> getRentalDtos(List<Rental> rentals) {
+        List<RentalDto> rentalDtos = new ArrayList<>();
+
+        for (Rental rental : rentals) {
+            rentalDtos.add(new RentalDto(
+                    rental.getId(),
+                    rental.getClient().getId(),
+                    rental.getBook().getId(),
+                    rental.getComicBook().getId()
+            ));
+        }
+        return rentalDtos;
+    }
+
+    @Override
+    public Optional<RentalDto> findById(Long id) {
+        Optional<Rental> rentalOpt = rentalRepository.findById(id);
+
+        if (rentalOpt.isPresent()) {
+            Rental foundRental = rentalOpt.get();
             return Optional.of(
                     new RentalDto(
+                            foundRental.getId(),
                             foundRental.getClient().getId(),
                             foundRental.getBook().getId(),
                             foundRental.getComicBook().getId()));
@@ -61,18 +94,18 @@ public class RentalServiceImpl implements RentalService {
                 throw new IllegalArgumentException("Book not found!");
             }
             rentalRepository.save(rental);
-            return new RentalDto(foundClient.get().getId(), foundBook.get().getId(), null);
+            return new RentalDto(rental.getId(), foundClient.get().getId(), foundBook.get().getId(), null);
         }
 
         Rental savedComicBookRental = saveComicBookRental(rentalDto, foundClient.get());
-        return new RentalDto(foundClient.get().getId(), null, savedComicBookRental.getComicBook().getId());
+        return new RentalDto(savedComicBookRental.getId(), foundClient.get().getId(), null, savedComicBookRental.getComicBook().getId());
     }
 
 
     private Rental saveComicBookRental(RentalDto rentalDto, Client foundClient) {
         Rental rental;
         if (rentalDto.getComicBookId() == null) {
-            throw new IllegalArgumentException("book_id and comicbook_id cannot both be null!");
+            throw new IllegalArgumentException("bookId and comicBookId cannot both be null!");
         }
 
         Optional<ComicBook> foundComicBook = comicBookRepository.findById(rentalDto.getComicBookId());
@@ -86,23 +119,25 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public Optional<RentalDto> returnRental(long id, RentalDto rentalDto) {
-        return Optional.empty();
+    public Optional<RentalDto> returnRental(Long id, RentalDto rentalDto) {
+        Optional<Rental> rentalOpt = rentalRepository.findById(id);
+
+        if (rentalOpt.isPresent()) {
+            Rental foundRental = rentalOpt.get();
+            foundRental.setReturnedDate(new Date());
+            Rental savedRental = rentalRepository.save(foundRental);
+            return Optional.of(
+                    new RentalDto(savedRental.getId(),
+                            savedRental.getClient().getId(),
+                            Optional.ofNullable(savedRental.getBook())
+                                    .map(Book::getId)
+                                    .orElse(null),
+                            Optional.ofNullable(savedRental.getComicBook())
+                                    .map(ComicBook::getId)
+                                    .orElse(null),
+                            savedRental.getReturnedDate()));
+        } else {
+            return Optional.empty();
+        }
     }
-
-//    public Optional<RentalDto> returnRental(long id, Rental rental) {
-//        Optional<Rental> rentalData = rentalRepository.findById(id);
-//
-//        if (rentalData.isPresent()) {
-//            Rental _rental = rentalData.get();
-//            //_rental.setClient(rental.getClient());
-//            //_rental.setBook(rental.getBook());
-//            //_rental.setComicBook(rental.getComicBook());
-//            _rental.setReturnedDate(rental.getReturnedDate());
-//            return Optional.of(rentalRepository.save(_rental));
-//        } else {
-//            return Optional.empty();
-//        }
-//    }
-
 }

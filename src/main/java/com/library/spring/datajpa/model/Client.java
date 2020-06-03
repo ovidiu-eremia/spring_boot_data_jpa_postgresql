@@ -9,7 +9,7 @@ public class Client {
 	@Id
 	@SequenceGenerator(name="clients_sequence", initialValue=1, allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clients_sequence")
-	private long id;
+	private Long id;
 
 	@Column(name = "name")
 	private String name;
@@ -22,7 +22,7 @@ public class Client {
 		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -34,7 +34,7 @@ public class Client {
 		this.name = name;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

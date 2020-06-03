@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface ClientService {
     List<Client> getAllClients(String name);
 
-    Optional<Client> findById(long id);
+    Optional<Client> findById(Long id);
 
     Client save(Client client);
 
-    Optional<Client> updateClient(long id, Client client);
+    Optional<Client> updateClient(Long id, Client client);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

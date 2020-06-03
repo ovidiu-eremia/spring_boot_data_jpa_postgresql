@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface ComicBookService {
     List<ComicBook> getAllComicBooks(String series, Integer number);
 
-    Optional<ComicBook> findById(long id);
+    Optional<ComicBook> findById(Long id);
 
     ComicBook save(ComicBook comicBook);
 
-    Optional<ComicBook> updateComicBook(long id, ComicBook comicBook);
+    Optional<ComicBook> updateComicBook(Long id, ComicBook comicBook);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

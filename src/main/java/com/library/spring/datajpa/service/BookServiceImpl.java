@@ -20,19 +20,19 @@ public class BookServiceImpl implements BookService {
         List<Book> books = new ArrayList<Book>();
 
         if (title != null) {
-            bookRepository.findByTitleContaining(title).forEach(books::add);
+            books.addAll(bookRepository.findByTitleContaining(title));
         } else {
             if (author != null) {
-                bookRepository.findByAuthorContaining(author).forEach(books::add);
+                books.addAll(bookRepository.findByAuthorContaining(author));
             } else
-                bookRepository.findAll().forEach(books::add);
+                books.addAll(bookRepository.findAll());
         }
 
         return books;
     }
 
     @Override
-    public Optional<Book> findById(long id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 
@@ -42,12 +42,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
 
     @Override
-    public Optional<Book> updateBook(long id, Book book) {
+    public Optional<Book> updateBook(Long id, Book book) {
         Optional<Book> bookData = bookRepository.findById(id);
 
         if (bookData.isPresent()) {

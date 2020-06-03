@@ -33,15 +33,16 @@ public class BookController {
 	private BookService bookService;
 
 	@GetMapping("/books")
-	public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title) {
+	public ResponseEntity<List<Book>> getAllBooks(@RequestParam(required = false) String title,
+												  @RequestParam(required = false) String author) {
 		try {
-			List<Book> books = bookService.getAllBooks(title, null);
+			List<Book> books = bookService.getAllBooks(title, author);
 
 			if (books.isEmpty()) {
 				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 			}
-
 			return new ResponseEntity<>(books, HttpStatus.OK);
+
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
