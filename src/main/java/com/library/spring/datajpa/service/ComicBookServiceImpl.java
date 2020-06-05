@@ -3,6 +3,7 @@ package com.library.spring.datajpa.service;
 import com.library.spring.datajpa.model.ComicBook;
 import com.library.spring.datajpa.repository.ComicBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class ComicBookServiceImpl implements ComicBookService {
         List<ComicBook> comicBooks = new ArrayList<ComicBook>();
 
         if (series != null) {
-            comicBookRepository.findBySeriesContaining(series).forEach(comicBooks::add);
+            comicBookRepository.findBySeriesContainingOrderBySeries(series).forEach(comicBooks::add);
         } else {
             if (number != null) {
-                comicBookRepository.findByNumber(number).forEach(comicBooks::add);
+                comicBookRepository.findByNumberOrderByNumber(number).forEach(comicBooks::add);
             } else {
-                comicBookRepository.findAll().forEach(comicBooks::add);
+                comicBooks.addAll(comicBookRepository.findAll(Sort.by(Sort.Order.asc("series"), Sort.Order.desc("number"))));
             }
         }
 

@@ -2,6 +2,8 @@ package com.library.spring.datajpa.service;
 
 import com.library.spring.datajpa.dto.RentalDto;
 import com.library.spring.datajpa.model.Book;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;

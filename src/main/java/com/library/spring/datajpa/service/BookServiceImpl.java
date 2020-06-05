@@ -3,6 +3,7 @@ package com.library.spring.datajpa.service;
 import com.library.spring.datajpa.model.Book;
 import com.library.spring.datajpa.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,12 +21,12 @@ public class BookServiceImpl implements BookService {
         List<Book> books = new ArrayList<Book>();
 
         if (title != null) {
-            books.addAll(bookRepository.findByTitleContaining(title));
+            books.addAll(bookRepository.findByTitleContainingOrderByTitle(title));
         } else {
             if (author != null) {
-                books.addAll(bookRepository.findByAuthorContaining(author));
+                books.addAll(bookRepository.findByAuthorContainingOrderByAuthor(author));
             } else
-                books.addAll(bookRepository.findAll());
+                books.addAll(bookRepository.findAll(Sort.by("title", "author")));
         }
 
         return books;

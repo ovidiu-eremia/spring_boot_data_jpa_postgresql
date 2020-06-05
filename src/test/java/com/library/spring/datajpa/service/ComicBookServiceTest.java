@@ -1,14 +1,13 @@
 package com.library.spring.datajpa.service;
 
-import com.library.spring.datajpa.model.Book;
 import com.library.spring.datajpa.model.ComicBook;
-import com.library.spring.datajpa.repository.BookRepository;
 import com.library.spring.datajpa.repository.ComicBookRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ComicBookServiceTest {
         ComicBook comicBook = new ComicBook(series, number);
         List<ComicBook> comicBooks = Collections.singletonList(comicBook);
 
-        given(comicBookRepository.findBySeriesContaining(series)).willReturn(comicBooks);
+        given(comicBookRepository.findBySeriesContainingOrderBySeries(series)).willReturn(comicBooks);
 
         //when
         List<ComicBook> result = underTest.getAllComicBooks(series, null);
@@ -44,7 +43,7 @@ public class ComicBookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(comicBook);
 
-        verify(comicBookRepository).findBySeriesContaining(series);
+        verify(comicBookRepository).findBySeriesContainingOrderBySeries(series);
         verify(comicBookRepository, times(0)).findAll();
     }
 
@@ -56,7 +55,7 @@ public class ComicBookServiceTest {
         ComicBook comicBook = new ComicBook(series, number);
         List<ComicBook> comicBooks = Collections.singletonList(comicBook);
 
-        given(comicBookRepository.findByNumber(number)).willReturn(comicBooks);
+        given(comicBookRepository.findByNumberOrderByNumber(number)).willReturn(comicBooks);
 
         //when
         List<ComicBook> result = underTest.getAllComicBooks(null, number);
@@ -65,7 +64,7 @@ public class ComicBookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(comicBook);
 
-        verify(comicBookRepository).findByNumber(number);
+        verify(comicBookRepository).findByNumberOrderByNumber(number);
         verify(comicBookRepository, times(0)).findAll();
     }
 
@@ -75,7 +74,7 @@ public class ComicBookServiceTest {
         ComicBook comicBook = new ComicBook("Some series", 123);
         List<ComicBook> comicBooks = Collections.singletonList(comicBook);
 
-        given(comicBookRepository.findAll()).willReturn(comicBooks);
+        given(comicBookRepository.findAll(Sort.by(Sort.Order.asc("series"), Sort.Order.desc("number")))).willReturn(comicBooks);
 
         //when
         List<ComicBook> result = underTest.getAllComicBooks(null, null);
@@ -84,8 +83,8 @@ public class ComicBookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(comicBook);
 
-        verify(comicBookRepository).findAll();
-        verify(comicBookRepository, times(0)).findBySeriesContaining(any());
+        verify(comicBookRepository).findAll(Sort.by(Sort.Order.asc("series"), Sort.Order.desc("number")));
+        verify(comicBookRepository, times(0)).findBySeriesContainingOrderBySeries(any());
     }
 
     @Test
@@ -94,7 +93,7 @@ public class ComicBookServiceTest {
         ComicBook comicBook = new ComicBook("Some series", 123);
         List<ComicBook> comicBooks = Collections.singletonList(comicBook);
 
-        given(comicBookRepository.findAll()).willReturn(comicBooks);
+        given(comicBookRepository.findAll(Sort.by(Sort.Order.asc("series"), Sort.Order.desc("number")))).willReturn(comicBooks);
 
         //when
         List<ComicBook> result = underTest.getAllComicBooks(null, null);
@@ -103,8 +102,8 @@ public class ComicBookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(comicBook);
 
-        verify(comicBookRepository).findAll();
-        verify(comicBookRepository, times(0)).findByNumber(any());
+        verify(comicBookRepository).findAll(Sort.by(Sort.Order.asc("series"), Sort.Order.desc("number")));
+        verify(comicBookRepository, times(0)).findByNumberOrderByNumber(any());
     }
 
     @Test

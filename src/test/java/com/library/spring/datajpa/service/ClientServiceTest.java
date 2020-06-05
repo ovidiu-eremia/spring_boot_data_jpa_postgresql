@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ClientServiceTest {
         Client client = new Client(name);
         List<Client> clients = Collections.singletonList(client);
 
-        given(clientRepository.findByNameContaining(name)).willReturn(clients);
+        given(clientRepository.findByNameContainingOrderByName(name)).willReturn(clients);
 
         //when
         List<Client> result = underTest.getAllClients(name);
@@ -42,7 +43,7 @@ public class ClientServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(client);
 
-        verify(clientRepository).findByNameContaining(name);
+        verify(clientRepository).findByNameContainingOrderByName(name);
         verify(clientRepository, times(0)).findAll();
     }
 
@@ -52,7 +53,7 @@ public class ClientServiceTest {
         Client client = new Client("Some name");
         List<Client> clients = Collections.singletonList(client);
 
-        given(clientRepository.findAll()).willReturn(clients);
+        given(clientRepository.findAll(Sort.by("name"))).willReturn(clients);
 
         //when
         List<Client> result = underTest.getAllClients(null);
@@ -61,8 +62,8 @@ public class ClientServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(client);
 
-        verify(clientRepository).findAll();
-        verify(clientRepository, times(0)).findByNameContaining(any());
+        verify(clientRepository).findAll(Sort.by("name"));
+        verify(clientRepository, times(0)).findByNameContainingOrderByName(any());
     }
 
     @Test
@@ -132,8 +133,6 @@ public class ClientServiceTest {
     public void updateClientWhenIdNotFound() {
         //given
         long id = 3L;
-        Client client = new Client("Some name");
-        client.setId(id);
         Client updatedClient = new Client("Another name");
         given(clientRepository.findById(id)).willReturn(Optional.empty());
 

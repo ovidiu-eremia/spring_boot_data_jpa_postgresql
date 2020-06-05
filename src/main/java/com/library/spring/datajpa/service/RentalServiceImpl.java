@@ -89,18 +89,22 @@ public class RentalServiceImpl implements RentalService {
         if (rentalDto.getBookId() != null) {
             Optional<Book> foundBook = bookRepository.findById(rentalDto.getBookId());
             if (foundBook.isPresent()) {
-                rental = new Rental(foundClient.get(), foundBook.get(), null, new Date());
+                Long bookId = foundBook.get().getId();
+                if (rentalRepository.checkBookAvailability(bookId) == true) {
+                    rental = new Rental(foundClient.get(), foundBook.get(), null, new Date());
+                    rentalRepository.save(rental);
+                } else {
+                    throw new IllegalArgumentException("Book not available!");
+                }
             } else {
                 throw new IllegalArgumentException("Book not found!");
             }
-            rentalRepository.save(rental);
             return new RentalDto(rental.getId(), foundClient.get().getId(), foundBook.get().getId(), null);
         }
 
         Rental savedComicBookRental = saveComicBookRental(rentalDto, foundClient.get());
         return new RentalDto(savedComicBookRental.getId(), foundClient.get().getId(), null, savedComicBookRental.getComicBook().getId());
     }
-
 
     private Rental saveComicBookRental(RentalDto rentalDto, Client foundClient) {
         Rental rental;

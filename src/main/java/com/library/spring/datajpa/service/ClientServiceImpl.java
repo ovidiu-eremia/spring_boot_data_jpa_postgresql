@@ -4,6 +4,7 @@ import com.library.spring.datajpa.model.Client;
 
 import com.library.spring.datajpa.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,9 +22,9 @@ public class ClientServiceImpl implements ClientService {
         List<Client> clients = new ArrayList<Client>();
 
         if (name != null) {
-            clientRepository.findByNameContaining(name).forEach(clients::add);
+            clientRepository.findByNameContainingOrderByName(name).forEach(clients::add);
         } else {
-            clientRepository.findAll().forEach(clients::add);
+            clientRepository.findAll(Sort.by("name")).forEach(clients::add);
         }
 
         return clients;

@@ -3,8 +3,12 @@ package com.library.spring.datajpa.dto;
 //import lombok.AllArgsConstructor;
 //import lombok.Data;
 
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+import java.util.Objects;
+
+//@EqualsAndHashCode
 public class RentalDto {
     public RentalDto() {
     }
@@ -70,4 +74,31 @@ public class RentalDto {
     private Long comicBookId;
     private Date returnedDate;
 
+    @Override
+    public String toString() {
+        return "RentalDto{" +
+                "id=" + id +
+                ", clientId=" + clientId +
+                ", bookId=" + bookId +
+                ", comicBookId=" + comicBookId +
+                ", returnedDate=" + returnedDate +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RentalDto rentalDto = (RentalDto) o;
+        return Objects.equals(id, rentalDto.id) &&
+                Objects.equals(clientId, rentalDto.clientId) &&
+                Objects.equals(bookId, rentalDto.bookId) &&
+                Objects.equals(comicBookId, rentalDto.comicBookId) &&
+                Objects.equals(returnedDate, rentalDto.returnedDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, clientId, bookId, comicBookId, returnedDate);
+    }
 }

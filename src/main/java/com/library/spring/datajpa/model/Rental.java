@@ -5,8 +5,9 @@ import lombok.Data;
 import javax.persistence.*;
 import java.sql.Time;
 import java.util.Date;
+import java.util.Objects;
 
-@Entity(name = "Rental")
+@Entity
 @Table(name = "rentals")
 public class Rental {
 
@@ -94,10 +95,27 @@ public class Rental {
     }
 
     @Override
-    public String toString() {
-        return "Rental [id=" + id + ", client=" + client.toString() + ", book=" + book.toString()
-                + ", comicBook=" + comicBook.toString() + ", rentedDate=" + rentedDate
-                + ", returnedDate=" + returnedDate + "]";
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rental rental = (Rental) o;
+        return Objects.equals(id, rental.id) &&
+                client.equals(rental.client) &&
+                Objects.equals(book, rental.book) &&
+                Objects.equals(comicBook, rental.comicBook) &&
+                Objects.equals(rentedDate, rental.rentedDate) &&
+                Objects.equals(returnedDate, rental.returnedDate);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, client, book, comicBook, rentedDate, returnedDate);
+    }
+//    @Override
+//    public String toString() {
+//        return "Rental [id=" + id + ", client=" + client.toString() + ", book=" + book.toString()
+//                + ", comicBook=" + comicBook != null?comicBook.toString():null + ", rentedDate=" + rentedDate
+//                + ", returnedDate=" + returnedDate + "]";
+//    }
 }
 

@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Sort;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class BookServiceTest {
         Book book = new Book(title, author);
         List<Book> books = Collections.singletonList(book);
 
-        given(bookRepository.findByTitleContaining(title)).willReturn(books);
+        given(bookRepository.findByTitleContainingOrderByTitle(title)).willReturn(books);
 
         //when
         List<Book> result = underTest.getAllBooks(title, null);
@@ -40,7 +41,7 @@ public class BookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(book);
 
-        verify(bookRepository).findByTitleContaining(title);
+        verify(bookRepository).findByTitleContainingOrderByTitle(title);
         verify(bookRepository, times(0)).findAll();
     }
 
@@ -52,7 +53,7 @@ public class BookServiceTest {
         Book book = new Book(title, author);
         List<Book> books = Collections.singletonList(book);
 
-        given(bookRepository.findByAuthorContaining(author)).willReturn(books);
+        given(bookRepository.findByAuthorContainingOrderByAuthor(author)).willReturn(books);
 
         //when
         List<Book> result = underTest.getAllBooks(null, author);
@@ -61,7 +62,7 @@ public class BookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(book);
 
-        verify(bookRepository).findByAuthorContaining(author);
+        verify(bookRepository).findByAuthorContainingOrderByAuthor(author);
         verify(bookRepository, times(0)).findAll();
     }
 
@@ -71,7 +72,7 @@ public class BookServiceTest {
         Book book = new Book("Some book", "Some author");
         List<Book> books = Collections.singletonList(book);
 
-        given(bookRepository.findAll()).willReturn(books);
+        given(bookRepository.findAll(Sort.by("title", "author"))).willReturn(books);
 
         //when
         List<Book> result = underTest.getAllBooks(null, null);
@@ -80,8 +81,8 @@ public class BookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(book);
 
-        verify(bookRepository).findAll();
-        verify(bookRepository, times(0)).findByTitleContaining(any());
+        verify(bookRepository).findAll(Sort.by("title", "author"));
+        verify(bookRepository, times(0)).findByTitleContainingOrderByTitle(any());
     }
 
     @Test
@@ -90,7 +91,7 @@ public class BookServiceTest {
         Book book = new Book("Some book", "Some author");
         List<Book> books = Collections.singletonList(book);
 
-        given(bookRepository.findAll()).willReturn(books);
+        given(bookRepository.findAll(Sort.by("title", "author"))).willReturn(books);
 
         //when
         List<Book> result = underTest.getAllBooks(null, null);
@@ -99,8 +100,8 @@ public class BookServiceTest {
         assertThat(result.size()).isEqualTo(1);
         assertThat(result.get(0)).isEqualTo(book);
 
-        verify(bookRepository).findAll();
-        verify(bookRepository, times(0)).findByAuthorContaining(any());
+        verify(bookRepository).findAll(Sort.by("title", "author"));
+        verify(bookRepository, times(0)).findByAuthorContainingOrderByAuthor(any());
     }
 
     @Test
